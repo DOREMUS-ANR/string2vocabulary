@@ -1,0 +1,43 @@
+group 'org.doremus'
+version '0.1'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile 'org.apache.jena:apache-jena-libs:3.1.0',
+            'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
+    testCompile 'junit:junit:4.11'
+}
+
+
+run {
+    if (projects.hasProperty('input'))
+        args = [
+                '--map', project.property('map'),
+                '--input', project.property('input'),
+                '--output', project.property('output'),
+                '--vocabularies', project.property('vocabularies')
+        ]
+    standardOutput = System.out
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.doremus.string2vocabulary.VocabularyManager'
+    }
+}
+
+// Plugin: 'application'
+// fill with the complete package path of the "main" class
+mainClassName = 'org.doremus.string2vocabulary.VocabularyManager'
+
