@@ -6,7 +6,7 @@ Built with Gradle and Apache Jena.
 
 ## As a module
 
-See the [test](test) folder for an example of usage.
+See the [test](tree/master/src/test) folder for an example of usage.
 
 ## Command Line
 
