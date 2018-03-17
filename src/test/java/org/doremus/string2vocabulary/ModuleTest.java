@@ -22,8 +22,8 @@ public class ModuleTest {
     try {
       Model mi = RDFDataMgr.loadModel(input);
       Model mo = RDFDataMgr.loadModel(output);
-      VocabularyManager.run(property2family, vocabularyFolder, mi, "test.ttl");
-      VocabularyManager.run(property2family, vocabularyFolder, mo, null);
+      VocabularyManager.run(property2family, vocabularyFolder, mi, null, "fr");
+      VocabularyManager.run(property2family, vocabularyFolder, mo, null, "fr");
 
       Assert.assertEquals(toTtlString(mi), toTtlString(mo));
     } catch (IOException e) {

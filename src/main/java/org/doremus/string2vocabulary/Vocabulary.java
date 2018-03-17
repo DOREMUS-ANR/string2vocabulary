@@ -1,5 +1,6 @@
 package org.doremus.string2vocabulary;
 
+import net.sf.junidecode.Junidecode;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
@@ -42,7 +43,7 @@ public abstract class Vocabulary implements Comparable<Vocabulary> {
     conceptSchemeIter = vocabulary.listStatements(new SimpleSelector(null, RDF.type, MODS.ModsResource));
     if (conceptSchemeIter.hasNext()) return new MODS(name, vocabulary);
 
-    // TODO else
+    // TODO else?
     System.out.println("Not managed vocabulary: " + name);
     return null;
   }
@@ -99,4 +100,12 @@ public abstract class Vocabulary implements Comparable<Vocabulary> {
     setSchemePathFromType(vocabulary.createResource(type));
   }
 
+  protected static String norm(String input) {
+    // remove punctuation
+    String seed = input.replaceAll("[.,\\/#!$%\\^&\\*;:{}=\\-_`~()]", " ");
+    // ascii transliteration
+    seed = Junidecode.unidecode(seed);
+    // lowercase
+    return seed.toLowerCase();
+  }
 }

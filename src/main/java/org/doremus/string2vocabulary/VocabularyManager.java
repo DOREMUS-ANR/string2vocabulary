@@ -28,9 +28,11 @@ public class VocabularyManager {
                           " UNION\n" +
                           " { ?s ?p ?label }\n" +
                           " FILTER(isLiteral(?label))}");
-  private static Map<Property, String> prop2FamilyMap;
+  private static Map<Property, PropMap> prop2FamilyMap;
   private static boolean verbose = false;
   private static String vocabularyDirPath;
+  private static StanfordLemmatizer slem;
+  private static String lang = "en";
 
   public static void init(URL property2FamilyResource) throws IOException {
     init(property2FamilyResource.getFile());
@@ -40,7 +42,7 @@ public class VocabularyManager {
     init(getMapFromCSV(Paths.get(property2FamilyCSV)));
   }
 
-  public static void init(Map<Property, String> property2FamilyMap) throws IOException {
+  public static void init(Map<Property, PropMap> property2FamilyMap) {
     vocabularies = new ArrayList<>();
     vocabularyMap = new HashMap<>();
 
@@ -51,6 +53,7 @@ public class VocabularyManager {
 
     File[] files = vocabularyDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".ttl"));
     assert files != null;
+
     for (File file : files) {
       Vocabulary vocabulary = Vocabulary.fromFile(file);
       if (vocabulary == null) continue;
@@ -62,27 +65,31 @@ public class VocabularyManager {
     }
 
     Collections.sort(vocabularies);
+
+    setLang(lang);
   }
 
-  public static Map<Property, String> getMapFromCSV(final Path path) throws IOException {
+  private static Map<Property, PropMap> getMapFromCSV(final Path path) throws IOException {
     Model m = ModelFactory.createDefaultModel();
 
     Stream<String> lines = Files.lines(path);
-    Map<Property, String> resultMap =
-            lines.map(line -> line.split(","))
-                    .collect(Collectors.toMap(line -> m.createProperty(line[0]), line -> line[1]));
-
+    Map<Property, PropMap> resultMap = lines.map(PropMap::new)
+            .collect(Collectors.toMap(pm -> m.createProperty(pm.getProperty()), pm -> pm));
     lines.close();
 
     return resultMap;
   }
 
+  public static void setLang(String _lang) {
+    // for lemmatiser
+    lang = _lang;
+    slem = new StanfordLemmatizer(lang);
+  }
 
   public static Vocabulary getVocabulary(String name) {
-    for (Vocabulary v : vocabularies)
-      if (name.equals(v.getName())) return v;
-
-    return null;
+    return vocabularies.stream()
+            .filter(v -> name.equals(v.getName()))
+            .findFirst().orElse(null);
   }
 
   public static MODS getMODS(String name) {
@@ -96,51 +103,64 @@ public class VocabularyManager {
   }
 
   public static void string2uri(Model m) {
-    for (Map.Entry<Property, String> entry : prop2FamilyMap.entrySet())
-      propertyMatching(m, entry.getKey(), entry.getValue());
+    prop2FamilyMap.forEach((key, value) -> propertyMatching(m, key, value.getCategory(), value.singularise()));
   }
 
 
-  private static Model propertyMatching(Model model, Property property, String category) {
+  private static Model propertyMatching(Model model, Property property, String category, boolean singularise) {
     int count = 0;
     List<Statement> statementsToRemove = new ArrayList<>(),
             statementsToAdd = new ArrayList<>();
+    try {
+      propertyMatchingSPARQL.setParam("?p", property);
+      QueryExecution qexec = QueryExecutionFactory.create(propertyMatchingSPARQL.asQuery(), model);
+      ResultSet result = qexec.execSelect();
 
-    propertyMatchingSPARQL.setParam("?p", property);
-    QueryExecution qexec = QueryExecutionFactory.create(propertyMatchingSPARQL.asQuery(), model);
-    ResultSet result = qexec.execSelect();
+      while (result.hasNext()) {
+        QuerySolution res = result.next();
+        Literal label = res.get("label").asLiteral();
 
-    while (result.hasNext()) {
-      QuerySolution res = result.next();
-      Literal label = res.get("label").asLiteral();
+        Resource concept = searchInCategory(label.toString(), null, category, singularise);
+        if (concept == null) continue; //match not found
 
-      Resource concept = searchInCategory(label.toString(), null, category);
-      if (concept == null) continue; //match not found
+        Resource subject = res.get("s").asResource();
+        if (res.get("o") != null) {
+          Resource object = res.get("o").asResource();
+          // remove all properties of the object
+          for (StmtIterator it = object.listProperties(); it.hasNext(); )
+            statementsToRemove.add(it.nextStatement());
+          // remove the link between the object and the subject
+          statementsToRemove.add(new StatementImpl(subject, property, object));
+        } else
+          statementsToRemove.add(new StatementImpl(subject, property, label));
 
-      Resource subject = res.get("s").asResource();
-      if (res.get("o") != null) {
-        Resource object = res.get("o").asResource();
-        // remove all properties of the object
-        for (StmtIterator it = object.listProperties(); it.hasNext(); )
-          statementsToRemove.add(it.nextStatement());
-        // remove the link between the object and the subject
-        statementsToRemove.add(new StatementImpl(subject, property, object));
-      } else
-        statementsToRemove.add(new StatementImpl(subject, property, label));
+        count++;
+        statementsToAdd.add(new StatementImpl(subject, property, concept));
+      }
 
-      count++;
-      statementsToAdd.add(new StatementImpl(subject, property, concept));
+      model.remove(statementsToRemove);
+      model.add(statementsToAdd);
+
+      if (verbose) System.out.println("Matched " + count + " elements for " + property.getLocalName());
+    } catch (RuntimeException re) {
+      System.out.println(re.getMessage());
     }
-
-    model.remove(statementsToRemove);
-    model.add(statementsToAdd);
-
-    if (verbose) System.out.println("Matched " + count + " elements for " + property.getLocalName());
     return model;
   }
 
 
-  public static Resource searchInCategory(String label, String lang, String category) {
+  public static Resource searchInCategory(String label, String lang, String category, boolean singularise) throws RuntimeException {
+    try {
+      List<Vocabulary> vList = getVocabularyCategory(category);
+      return searchInCategory(label, lang, vList, singularise);
+    } catch (NullPointerException npe) {
+      throw new RuntimeException("Family of vocabularies not available: " + category);
+    }
+  }
+
+  public static Resource searchInCategory(String label, String lang, List<Vocabulary> category, boolean singularise) {
+    label = Vocabulary.norm(label);
+
     String langLabel;
     if (lang == null) {
       langLabel = label;
@@ -150,34 +170,62 @@ public class VocabularyManager {
     } else {
       langLabel = label + "@" + lang;
     }
-    List<Vocabulary> vList = getVocabularyCategory(category);
+
+    if (singularise) {
+      // first check: singularise just the first word
+      Resource match = searchInCategory(toSingular(label, false), lang, category, false);
+      if (match != null) return match;
+      // second check: singularise the whole string
+      match = searchInCategory(toSingular(label, true), lang, category, false);
+      if (match != null) return match;
+    }
+
     Resource concept;
     // first check: text + language
-    for (Vocabulary v : vList) {
+    for (Vocabulary v : category) {
       concept = v.findConcept(langLabel, true);
       if (concept != null) return concept;
     }
     // second check: text without caring about the language
-    for (Vocabulary v : vList) {
+    for (Vocabulary v : category) {
       concept = v.findConcept(label, false);
       if (concept != null) return concept;
     }
 
     // workaround: mi bemol => mi bemol majeur
     if ("key".equals(category) && !label.endsWith("majeur")) {
-      return searchInCategory(label + " majeur", lang, category);
+      return searchInCategory(label + " majeur", lang, category, singularise);
     }
     return null;
   }
 
+  private static String toSingular(String r, boolean full) {
+    if (r == null || r.isEmpty()) return "";
+    if (full)
+      return slem.lemmatize(r).stream()
+              .collect(Collectors.joining(" "));
+
+
+    String[] parts = r.split(" ");
+    if (parts.length == 1) return slem.lemmatize(parts[0]).get(0);
+
+    // cornets à pistons --> cornet à pistons
+    parts[0] = slem.lemmatize(parts[0]).get(0);
+    return String.join(" ", parts);
+  }
+
 
   public static void run(String property2family, String vocabularyFolder, Model m, String outputFile) throws IOException {
+    run(property2family, vocabularyFolder, m, outputFile, "en");
+  }
+
+  public static void run(String property2family, String vocabularyFolder, Model m, String outputFile, String lang) throws IOException {
     // full run for standalone script
     VocabularyManager.setVerbose(true);
     VocabularyManager.setVocabularyFolder(vocabularyFolder);
     VocabularyManager.init(property2family);
+    VocabularyManager.setLang(lang);
     VocabularyManager.string2uri(m);
-
 
     if (outputFile == null) return;
 
@@ -202,18 +250,18 @@ public class VocabularyManager {
     String input = getParam(params, "--input");
     String vocabularyFolder = getParam(params, "--vocabularies");
     String output = getParam(params, "--output");
-    if(output == null) output = input.replace(".ttl", "_output.ttl");
+    if (output == null) output = input.replace(".ttl", "_output.ttl");
+    String lang = getParam(params, "--lang");
 
     Model mi = RDFDataMgr.loadModel(input);
-    VocabularyManager.run(property2family, vocabularyFolder, mi, output);
+    VocabularyManager.run(property2family, vocabularyFolder, mi, output, lang);
 
   }
 
   private static String getParam(List<String> params, String key) {
     int i = params.indexOf(key);
     if (i < 0) return null;
-    return params.get(i+1);
+    return params.get(i + 1);
   }
-
 
 }

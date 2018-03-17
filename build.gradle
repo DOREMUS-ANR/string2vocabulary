@@ -1,10 +1,23 @@
 group 'org.doremus'
-version '0.1'
+version '0.2'
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'idea'
+idea {
+    module {
+        outputDir file('out/production/classes/')
+        testOutputDir file('out/test/classes/')
+    }
+}
 
 sourceCompatibility = 1.8
+
+configurations.all {
+    resolutionStrategy {
+        force 'xml-apis:xml-apis:1.4.01'
+    }
+}
 
 repositories {
     jcenter()
@@ -14,8 +27,12 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.jena:apache-jena-libs:3.1.0',
-            'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
+    compile 'xml-apis:xml-apis:1.4.01',
+            'org.apache.jena:apache-jena-libs:3.6.0',
+            'com.moparisthebest:junidecode:0.1.1',
+            'edu.stanford.nlp:stanford-corenlp:3.6.0',
+            'edu.stanford.nlp:stanford-corenlp:3.6.0:models'
+
     testCompile 'junit:junit:4.11'
 }
 
@@ -24,6 +41,7 @@ run {
     if (projects.hasProperty('input'))
         args = [
                 '--map', project.property('map'),
+                '--lang', project.property('lang'),
                 '--input', project.property('input'),
                 '--output', project.property('output'),
                 '--vocabularies', project.property('vocabularies')
@@ -40,4 +58,3 @@ jar {
 // Plugin: 'application'
 // fill with the complete package path of the "main" class
 mainClassName = 'org.doremus.string2vocabulary.VocabularyManager'
-

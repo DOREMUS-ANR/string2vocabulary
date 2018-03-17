@@ -35,7 +35,7 @@ public class SKOSVocabulary extends Vocabulary {
       StmtIterator labelIterator = resource.listProperties(SKOS.prefLabel);
       //for each label
       while (labelIterator.hasNext()) {
-        String value = labelIterator.nextStatement().getObject().toString();
+        String value = norm(labelIterator.nextStatement().getObject().toString());
         // get the list or create a new one
         List<Resource> ls = substitutionMap.computeIfAbsent(value, k -> new ArrayList<>());
         // add it to the list
@@ -45,7 +45,7 @@ public class SKOSVocabulary extends Vocabulary {
       labelIterator = resource.listProperties(SKOS.altLabel);
       //for each label
       while (labelIterator.hasNext()) {
-        String value = labelIterator.nextStatement().getObject().toString();
+        String value = norm(labelIterator.nextStatement().getObject().toString());
 
         // get the list or create a new one
         List<Resource> ls = substitutionMap.computeIfAbsent(value, k -> new ArrayList<>());
@@ -53,8 +53,8 @@ public class SKOSVocabulary extends Vocabulary {
         ls.add(resource);
       }
     }
-
   }
+
 
   @Override
   public Resource findConcept(String text, boolean strict) {

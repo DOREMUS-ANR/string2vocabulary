@@ -10,12 +10,11 @@
 @prefix prov:  <http://www.w3.org/ns/prov#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 
-
 <http://data.doremus.org/expression/113473da-9e21-3cdf-9328-dcc836edadba/casting/1/detail/5>
         a       mus:M23_Casting_Detail ;
-        mus:U2_foresees_use_of_medium_of_performance_of_type
+        mus:U2_foresees_use_of_medium_of_performance
                 <http://data.doremus.org/vocabulary/iaml/mop/vms> ;
         mus:U30_foresees_quantity_of_mop
                 "1"^^xsd:int ;
-        mus:U36_foresees_responsibility_of_type
+        mus:U36_foresees_responsibility
                 "soliste"@fr .
