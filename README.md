@@ -3,11 +3,10 @@ String2Vocabulary
 
 [![](https://jitpack.io/v/DOREMUS-ANR/string2vocabulary.svg)](https://jitpack.io/#DOREMUS-ANR/string2vocabulary)
 
-
-Look for literal in the RDF and substitute with URIs from controlled vocabularies.
+Look for literals in an RDF graph and substitute them with URIs from controlled vocabularies.
 Built with Gradle and Apache Jena.
 
-It uses the name of the vocabularies files for grouping them in **families**. I.e. `city-italy.ttl` and `city-france.ttl` are part of the family `city`.
+It uses the the vocabulary filenames for grouping them in **families**. For example, `city-italy.ttl` and `city-france.ttl` are part of the family `city`.
 
 ## Input
 
@@ -28,7 +27,7 @@ ns:myMusicWork mus:U11_has_key [
    mus:U2_foresees_use_of_medium_of_performance "mezzosoprano" .
 ```
 
-this produce as output.
+this produces as output.
 
 ```turtle
 ns:myMusicWork mus:U11_has_key <http://data.doremus.org/vocabulary/key/d> ;
@@ -51,7 +50,7 @@ ns:myMusicWork mus:U11_has_key <http://data.doremus.org/vocabulary/key/d> ;
 
   ```
   dependencies {
-     compile 'com.github.DOREMUS-ANR:string2vocabulary:0.1'
+     compile 'com.github.DOREMUS-ANR:string2vocabulary:0.2'
   }
   ```
 
