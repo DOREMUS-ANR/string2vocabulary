@@ -1,6 +1,9 @@
 String2Vocabulary
 =================
 
+[![](https://jitpack.io/v/DOREMUS-ANR/string2vocabulary.svg)](https://jitpack.io/#DOREMUS-ANR/string2vocabulary)
+
+
 Look for literal in the RDF and substitute with URIs from controlled vocabularies.
 Built with Gradle and Apache Jena.
 
