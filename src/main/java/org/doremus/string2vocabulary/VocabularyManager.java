@@ -21,7 +21,7 @@ public class VocabularyManager {
   private static Map<String, List<Vocabulary>> vocabularyMap;
   private static final ParameterizedSparqlString propertyMatchingSPARQL =
           new ParameterizedSparqlString(
-                  "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+                  "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
                           "prefix ecrm: <http://erlangen-crm.org/current/>\n" +
                           "select DISTINCT ?s ?o ?label where {\n" +
                           " { ?s ?p ?o . ?o rdfs:label | ecrm:P1_is_identified_by ?label }\n" +
