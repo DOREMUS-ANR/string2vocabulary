@@ -21,7 +21,6 @@ public class MODS extends Vocabulary {
     super(name, model);
 
     setSchemePathFromType("http://www.w3.org/ns/dcat#Catalog");
-
   }
 
   @Override
@@ -74,5 +73,18 @@ public class MODS extends Vocabulary {
     }
 
     return candidateCatalogs.get(0);
+  }
+
+  public List<Resource> bySubject(String subject) {
+    if (subject == null) return null;
+    List<Resource> candidateCatalogs = new ArrayList<>();
+
+    // load related artists
+    ResIterator it = vocabulary.listResourcesWithProperty(DCTerms.subject, vocabulary.getResource(subject));
+    while (it.hasNext()) {
+      Resource res = it.next();
+      candidateCatalogs.add(res);
+    }
+    return candidateCatalogs;
   }
 }
