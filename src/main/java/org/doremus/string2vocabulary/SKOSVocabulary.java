@@ -1,8 +1,8 @@
 package org.doremus.string2vocabulary;
 
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
-import org.apache.jena.rdf.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class SKOSVocabulary extends Vocabulary {
 
     // for each concept
     StmtIterator conceptIter =
-            vocabulary.listStatements(new SimpleSelector(null, RDF.type, SKOS.Concept));
+      vocabulary.listStatements(new SimpleSelector(null, RDF.type, SKOS.Concept));
 
     if (!conceptIter.hasNext()) {
       System.out.println("SKOSVocabulary constructor | Warning: No concepts in the reference rdf at " + name);
@@ -35,7 +35,11 @@ public class SKOSVocabulary extends Vocabulary {
       StmtIterator labelIterator = resource.listProperties(SKOS.prefLabel);
       //for each label
       while (labelIterator.hasNext()) {
-        String value = norm(labelIterator.nextStatement().getObject().toString());
+        Literal nx = labelIterator.nextStatement().getLiteral();
+        String value = norm(nx.getLexicalForm());
+        String lang = nx.getLanguage();
+        if (lang != null && !lang.isEmpty()) value += "@" + nx.getLanguage();
+
         // get the list or create a new one
         List<Resource> ls = substitutionMap.computeIfAbsent(value, k -> new ArrayList<>());
         // add it to the list
@@ -45,7 +49,10 @@ public class SKOSVocabulary extends Vocabulary {
       labelIterator = resource.listProperties(SKOS.altLabel);
       //for each label
       while (labelIterator.hasNext()) {
-        String value = norm(labelIterator.nextStatement().getObject().toString());
+        Literal nx = labelIterator.nextStatement().getLiteral();
+        String value = norm(nx.getLexicalForm());
+        String lang = nx.getLanguage();
+        if (lang != null && !lang.isEmpty()) value += "@" + nx.getLanguage();
 
         // get the list or create a new one
         List<Resource> ls = substitutionMap.computeIfAbsent(value, k -> new ArrayList<>());
