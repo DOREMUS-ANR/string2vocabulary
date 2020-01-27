@@ -57,7 +57,11 @@ public abstract class Vocabulary implements Comparable<Vocabulary> {
     else return null;
   }
 
-  public abstract Resource findConcept(String text, boolean strict);
+  public Resource findConcept(String text, boolean strict) {
+    return findConcept(text, strict, false);
+  }
+
+  public abstract Resource findConcept(String text, boolean strict, boolean excludeBrackets);
 
 
   @Override
@@ -107,5 +111,11 @@ public abstract class Vocabulary implements Comparable<Vocabulary> {
     seed = Junidecode.unidecode(seed);
     // lowercase
     return seed.toLowerCase();
+  }
+
+  protected static String normNb(String input) {
+    // remove brackets
+    input = input.replaceAll("\\([^)]+\\)", "").trim();
+    return norm(input);
   }
 }

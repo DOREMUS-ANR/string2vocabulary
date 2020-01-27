@@ -1,10 +1,12 @@
 package org.doremus.string2vocabulary;
 
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -29,6 +31,21 @@ public class ModuleTest {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  @Test
+  public void matchNoBrackets() {
+    ClassLoader classLoader = getClass().getClassLoader();
+    String vocabularyFolder = classLoader.getResource("vocabulary").getPath();
+
+
+    Vocabulary v = Vocabulary.fromFile(new File(vocabularyFolder + "/test.ttl"));
+
+    Resource brackMatch = v.findConcept("test@en", true);
+    Resource noBrackMatch = v.findConcept("test@en", true, true);
+    System.out.println(noBrackMatch);
+    Assert.assertNull(brackMatch);
+    Assert.assertNotNull(noBrackMatch);
   }
 
   private String toTtlString(Model m) {

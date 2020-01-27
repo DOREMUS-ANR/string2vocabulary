@@ -24,7 +24,7 @@ public class MODS extends Vocabulary {
   }
 
   @Override
-  public Resource findConcept(String text, boolean strict) {
+  public Resource findConcept(String text, boolean strict, boolean excludeBrackets) {
     return findModsResource(text, null);
   }
 
@@ -32,14 +32,14 @@ public class MODS extends Vocabulary {
     if (identifier == null || identifier.isEmpty()) return null;
 
     String modsSearch =
-            "prefix modsrdf: <http://www.loc.gov/standards/mods/rdf/v1/#>\n" +
-                    "select distinct ?cat where {\n" +
-                    "  { ?cat modsrdf:identifier ?id}\n" +
-                    "  UNION {\n" +
-                    "    ?cat modsrdf:identifierGroup / modsrdf:identifierGroupValue ?id\n" +
-                    "  }\n" +
-                    "  FILTER (lcase(str(?id)) = \"" + identifier.toLowerCase() + "\")\n" +
-                    "}";
+      "prefix modsrdf: <http://www.loc.gov/standards/mods/rdf/v1/#>\n" +
+        "select distinct ?cat where {\n" +
+        "  { ?cat modsrdf:identifier ?id}\n" +
+        "  UNION {\n" +
+        "    ?cat modsrdf:identifierGroup / modsrdf:identifierGroupValue ?id\n" +
+        "  }\n" +
+        "  FILTER (lcase(str(?id)) = \"" + identifier.toLowerCase() + "\")\n" +
+        "}";
 
     // search all catalogs with that identifier
     QueryExecution qexec = QueryExecutionFactory.create(modsSearch, vocabulary);
