@@ -191,6 +191,16 @@ public class VocabularyManager {
       concept = v.findConcept(label, false);
       if (concept != null) return concept;
     }
+    // third check: exclude brackets
+    for (Vocabulary v : category) {
+      concept = v.findConcept(langLabel, true, true);
+      if (concept != null) return concept;
+    }
+    // fourth check: exclude brackets + not caring about the language
+    for (Vocabulary v : category) {
+      concept = v.findConcept(langLabel, false, true);
+      if (concept != null) return concept;
+    }
 
     // workaround: mi bemol => mi bemol majeur
     if ("key".equals(category) && !label.endsWith("majeur")) {
