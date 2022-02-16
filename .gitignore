@@ -1,6 +1,7 @@
+# gradle workspace directory
 .gradle
 
-# output directory
+# build output directory
 build/
 
 # eclim daemon conf file
@@ -27,3 +28,6 @@ gradle-app.setting
 #intellij
 .idea
 *.iws
+
+# output example
+output.ttl
