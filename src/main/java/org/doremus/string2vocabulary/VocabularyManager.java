@@ -262,6 +262,8 @@ public class VocabularyManager {
     String output = getParam(params, "--output");
     if (output == null) output = input.replace(".ttl", "_output.ttl");
     String lang = getParam(params, "--lang");
+    System.out.println("Config:map='" + property2family + "':input='" + input + "':vocabularies='" + vocabularyFolder + "':output='" + output + "':lang='" + lang + "'.");
+
 
     Model mi = RDFDataMgr.loadModel(input);
     VocabularyManager.run(property2family, vocabularyFolder, mi, output, lang);
