@@ -44,7 +44,13 @@ ns:myMusicWork mus:U11_has_key <http://data.doremus.org/vocabulary/key/d> ;
 - Normalise the labels by removing punctuation, decoding to ASCII, using lowercase
 - Search also for the singular version of the word with [Stanford CoreNLP](https://github.com/stanfordnlp/CoreNLP)
 
-## As a module
+Dependencies:
+* Build tool: [Gradle](https://gradle.org/) 7+
+* See the `dependencies` section in the [build.gradle](build.gradle) file for project dependencies.
+
+## Usage
+
+### As a module
 
 1. Add it as dependency. E.g. in `build.gradle`:
 
@@ -103,11 +109,20 @@ VocabularyManager.string2uri(model)
 
 See the [test](src/test) folder for another example of usage.
 
-## Command Line
+### Command Line
 
-    gradle run -Pmap="/location/to/property2family.csv"  -Pinput="/location/to/input.ttl"
-    -Pvocabularies="/location/to/vocabularyFolder"
+Run the library from CLI with `gradle run`:
+```shell
+# Canonical form
+gradle run -Pmap="/location/to/property2family.csv" \
+  -Pinput="/location/to/input.ttl" \
+  -Pvocabularies="/location/to/vocabularyFolder"
 
+# Example with test files provided
+gradle run -Pmap="src/test/resources/property2family.csv" \
+  -Pinput="src/test/resources/input.ttl" \
+  -Pvocabularies="src/test/resources/vocabulary"
+```
 
 | param | example | comment |
 | ----- | ------- | ------- |
@@ -116,3 +131,9 @@ See the [test](src/test) folder for another example of usage.
 | input   | `/location/to/input.ttl` | The input turtle file |
 | output _(Optional)_   | `/location/to/output.ttl` | The output turtle file. Default: `inputPath/inputName_output.ttl` |
 | lang  _(Optional)_  | `fr` | Language to be used for singularising the words. Default: `en`. |
+
+Default `gradle run` behavior rely on *project properties* set in the [gradle.properties](gradle.properties) file.
+See the following links for details about *properties* in Gradle:
+* [Passing Command Line Arguments in Gradle](https://www.baeldung.com/gradle-command-line-arguments)
+* [Gradle project properties best practices](https://tomgregory.com/gradle-project-properties-best-practices/)
+* [Configuring Gradle with "gradle.properties" ](https://dev.to/jmfayard/configuring-gradle-with-gradle-properties-211k)
