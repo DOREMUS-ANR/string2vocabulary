@@ -27,13 +27,14 @@ repositories {
 }
 
 dependencies {
-    compile 'xml-apis:xml-apis:1.4.01',
-            'org.apache.jena:apache-jena-libs:3.6.0',
+    implementation 'xml-apis:xml-apis:1.4.01',
+            'org.apache.jena:apache-jena-libs:4.4.0',
             'com.moparisthebest:junidecode:0.1.1',
             'edu.stanford.nlp:stanford-corenlp:3.6.0',
             'edu.stanford.nlp:stanford-corenlp:3.6.0:models'
 
-    testCompile 'junit:junit:4.11'
+    testImplementation 'junit:junit:4.11'
+
 }
 
 
