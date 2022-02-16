@@ -42,7 +42,7 @@ dependencies {
 
 
 run {
-    if (projects.hasProperty('input'))
+    if (project.hasProperty('input'))
         args = [
                 '--map', project.property('map'),
                 '--lang', project.property('lang'),
