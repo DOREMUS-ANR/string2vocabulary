@@ -1,5 +1,5 @@
 group 'org.doremus'
-version '0.7.0'
+version '0.7.1'
 
 apply plugin: 'java'
 apply plugin: 'application'
@@ -15,28 +15,29 @@ sourceCompatibility = 1.8
 
 configurations.all {
     resolutionStrategy {
-        force 'xml-apis:xml-apis:1.4.01'
+        force 'xml-apis:xml-apis:2.0.2'
     }
 }
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
     flatDir {
         dirs 'libs'
     }
 }
 
 dependencies {
-    implementation 'xml-apis:xml-apis:1.4.01',
+    implementation 'xml-apis:xml-apis:2.0.2',
             'org.apache.jena:apache-jena-libs:4.4.0',
             'com.moparisthebest:junidecode:0.1.1',
-            'edu.stanford.nlp:stanford-corenlp:3.6.0',
-            'edu.stanford.nlp:stanford-corenlp:3.6.0:models',
+            'edu.stanford.nlp:stanford-corenlp:4.5.1',
+            'edu.stanford.nlp:stanford-corenlp:4.5.1:models',
             // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
-            'org.apache.logging.log4j:log4j-slf4j-impl:2.17.1'
+            'org.apache.logging.log4j:log4j-slf4j-impl:2.19.0'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 
