@@ -1,0 +1,42 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix ecrm:    <http://erlangen-crm.org/current/> .
+@prefix efrbroo: <http://erlangen-crm.org/efrbroo/> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix mus:     <http://data.doremus.org/ontology#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema:  <http://schema.org/> .
+@prefix time:    <http://www.w3.org/2006/time#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+<http://data.doremus.org/expression/001/casting/1/detail/1>
+        a       mus:M23_Casting_Detail ;
+        mus:U2_foresees_use_of_medium_of_performance
+                "mezzosopranos" ;
+        mus:U30_foresees_quantity_of_mop
+                "1"^^xsd:int ;
+        mus:U36_foresees_responsibility
+                "soliste"@fr .
+
+<http://example.org/graph/other/> {
+    <http://data.doremus.org/expression/003/casting/1/detail/1>
+            a       mus:M23_Casting_Detail ;
+            mus:U2_foresees_use_of_medium_of_performance
+                    "mezzosopranos" ;
+            mus:U30_foresees_quantity_of_mop
+                    "1"^^xsd:int ;
+            mus:U36_foresees_responsibility
+                    "soliste"@fr .
+}
+
+<http://example.org/graph/object/> {
+    <http://data.doremus.org/expression/002/casting/1/detail/1>
+            a       mus:M23_Casting_Detail ;
+            mus:U2_foresees_use_of_medium_of_performance
+                    <http://data.doremus.org/vocabulary/iaml/mop/vms> ;
+            mus:U30_foresees_quantity_of_mop
+                    "1"^^xsd:int ;
+            mus:U36_foresees_responsibility
+                    "soliste"@fr .
+}

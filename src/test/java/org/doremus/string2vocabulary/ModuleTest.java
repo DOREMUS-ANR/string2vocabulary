@@ -1,5 +1,6 @@
 package org.doremus.string2vocabulary;
 
+import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
@@ -22,10 +23,13 @@ public class ModuleTest {
     String vocabularyFolder = classLoader.getResource("vocabulary").getPath();
 
     try {
-      Model mi = RDFDataMgr.loadModel(input);
-      Model mo = RDFDataMgr.loadModel(output);
-      VocabularyManager.run(property2family, vocabularyFolder, mi, null, "fr");
-      VocabularyManager.run(property2family, vocabularyFolder, mo, null, "fr");
+      String ng = "";
+      Dataset din = RDFDataMgr.loadDataset(input);
+      Dataset dout = RDFDataMgr.loadDataset(output);
+      Model mi = din.getDefaultModel();
+      Model mo = dout.getDefaultModel();
+      VocabularyManager.run(property2family, vocabularyFolder, din,  ng, mi, null, "fr");
+      VocabularyManager.run(property2family, vocabularyFolder, dout, ng, mo, null, "fr");
 
       Assert.assertEquals(toTtlString(mi), toTtlString(mo));
     } catch (IOException e) {
