@@ -30,4 +30,8 @@ gradle-app.setting
 *.iws
 
 # output example
-output.ttl
+#output.ttl
+#output.trig
+
+# local documentation
+doc/

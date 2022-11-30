@@ -1,5 +1,5 @@
 group 'org.doremus'
-version '0.6.1'
+version '0.7.0'
 
 apply plugin: 'java'
 apply plugin: 'application'
@@ -48,7 +48,8 @@ run {
                 '--lang', project.property('lang'),
                 '--input', project.property('input'),
                 '--output', project.property('output'),
-                '--vocabularies', project.property('vocabularies')
+                '--vocabularies', project.property('vocabularies'),
+                '--graph', project.property('graph')
         ]
     standardOutput = System.out
 }
