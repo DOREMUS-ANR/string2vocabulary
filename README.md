@@ -189,3 +189,40 @@ References:
 In the general case, please
 * *fork and create merge request* OR
 * *raise an issue* into the project's space.
+
+
+## Citation
+
+If you use this software in a scientific publication, please cite:
+
+```
+Pasquale Lisena, Konstantin Todorov, Cécile Cecconi, Françoise Leresche, Isabelle Canno, Frédéric Puyrenier, Martine Voisin, Thierry Le Meur, & Raphaël Troncy. (2018). Controlled Vocabularies for Music Metadata. Proceedings of the 19th International Society for Music Information Retrieval Conference, 424–430. https://doi.org/10.5281/zenodo.1492441
+
+```
+
+In BibTex:
+
+```
+@inproceedings{lisena2018vocabularies,
+  author       = {Pasquale Lisena and
+                  Konstantin Todorov and
+                  Cécile Cecconi and
+                  Françoise Leresche and
+                  Isabelle Canno and
+                  Frédéric Puyrenier and
+                  Martine Voisin and
+                  Thierry Le Meur and
+                  Raphaël Troncy},
+  title        = {Controlled Vocabularies for Music Metadata},
+  booktitle    = {{19th International Society for 
+                   Music Information Retrieval Conference}},
+  year         = 2018,
+  pages        = {424-430},
+  publisher    = {ISMIR},
+  address      = {Paris, France},
+  month        = sep,
+  venue        = {Paris, France},
+  doi          = {10.5281/zenodo.1492441},
+  url          = {https://doi.org/10.5281/zenodo.1492441}
+}
+```
