@@ -1,0 +1,48 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "String2Vocabulary"
+url: https://github.com/DOREMUS-ANR/string2vocabulary
+date-released: 2018-09-23
+type: software
+preferred-citation:
+  type: conference-paper
+  authors:
+  - family-names: "Lisena"
+    given-names: "Pasquale"
+    orcid: "https://orcid.org/0000-0003-3094-5585"
+    email: pasquale.lisena@eurecom.fr
+  - family-names: "Todorov Fr ́ed ́eric Puyrenier4Martine Voisin5Thierry Le Meur3Rapha ̈el Tronc"
+    given-names: "Konstantin"
+    orcid: "https://orcid.org/0000−0003−4347−2940"
+  - family-names: "Cecconi"
+    given-names: "C\'{e}cile"
+    orcid: "https://orcid.org/0000−0001−9195−8203"
+  - family-names: "Leresche"
+    given-names: "Franc\c{o}ise"
+    orcid: "https://orcid.org/0000−0001−9195−8203"
+  - family-names: "Canno"
+    given-names: "Isabelle"
+    orcid: "https://orcid.org/0000−0001−9195−8203"
+  - family-names: "Puyrenier"
+    given-names: "Fr\'{e}d\'{e}ric"
+    orcid: "https://orcid.org/0000−0001−9195−8203"
+  - family-names: "Voisin"
+    given-names: "Martine"
+    orcid: "https://orcid.org/0000−0001−9195−8203"
+  - family-names: "Le Meur"
+    given-names: "Thierry"
+    orcid: "https://orcid.org/0000−0001−9195−8203"
+  - family-names: "Troncy"
+    given-names: "Raphael"
+    orcid: "https://orcid.org/0000−0003−0457−1436"
+  doi: "10.5281/zenodo.1492441"
+  title: "Controlled Vocabularies for Music Metadata"
+  conference:
+    name: "19th International Society for Music Information Retrieval Conference"
+  collection-title: "ISMIR"
+  city: Paris
+  country: FR
+  start: 424 # First page number
+  end: 430 # Last page number
+  month: 9
+  year: 2018
