@@ -31,9 +31,7 @@ preferred-citation:
     orcid: "https://orcid.org/0000−0003−0457−1436"
   doi: "10.5281/zenodo.1492441"
   title: "Controlled Vocabularies for Music Metadata"
-  conference:
-    name: "19th International Society for Music Information Retrieval Conference"
-  collection-title: "ISMIR"
+  collection-title: "19th International Society for Music Information Retrieval Conference (ISMIR)"
   city: Paris
   country: FR
   start: 424 # First page number
